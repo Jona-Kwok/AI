@@ -1,4 +1,4 @@
 # AI
-#The excercise for ai course
-24.Jan, astar the first one
-25.Jan, basic astar
+he excercise for ai course
+\n24.Jan, astar the first one
+\n25.Jan, basic astar
