@@ -25,6 +25,7 @@ public class Aalgorithm {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
 			{ 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0 },
 			{ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 } };
+	public static int count =0;
 
 	/**
 	 * @param args
@@ -44,6 +45,7 @@ public class Aalgorithm {
 	
 	public static void myAstar(HashMap<String, Integer> on,HashMap<String, Integer> visited,int[] dest)
 	{
+		count ++ ;
 		int[] now = {-1,-1};
 		int dis = -1;
 		
@@ -69,7 +71,7 @@ public class Aalgorithm {
 		
 		if(now[0]==dest[0] && now[1]==dest[1])
 		{
-			System.out.println(" sdf" + dis);
+			System.out.println("The shortest path is " + dis+" steps and took "+count+" recursions");
 			return ;
 		}
 		
