@@ -7,3 +7,5 @@ the excercise for ai course
 
 25.Jan, basic astar.
 
+27.Jan, all done about astar.
+
