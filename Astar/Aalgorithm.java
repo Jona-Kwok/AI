@@ -38,12 +38,11 @@ public class Aalgorithm {
 		int[] dest = { 11, 11 };
 
 		HashMap<String, Integer> queue = new HashMap<String, Integer>();
-		HashMap<String, Integer> visited = new HashMap<String, Integer>();
 		queue.put("[" + init[0] + "," + init[1] + "]", (int) (0+Math.sqrt((dest[0]-init[0])*(dest[0]-init[0]) + (dest[1]-init[1])*(dest[1]-init[1]))));
-		myAstar(queue, visited, dest);
+		myAstar(queue, dest);
 	}
 	
-	public static void myAstar(HashMap<String, Integer> on,HashMap<String, Integer> visited,int[] dest)
+	public static void myAstar(HashMap<String, Integer> on,int[] dest)
 	{
 		count ++ ;
 		int[] now = {-1,-1};
@@ -64,7 +63,6 @@ public class Aalgorithm {
 				
 				dis = min - (int) Math.sqrt(Math.pow(dest[0]-now[0], 2)+Math.pow(dest[1]-now[1], 2));
 				on.remove(entry.getKey());
-				visited.put(entry.getKey().toString(), dis);
 				break;
 			}
 		}
@@ -89,20 +87,16 @@ public class Aalgorithm {
 				(int) Math.sqrt((Math.pow(dest[0] - now[0], 2) + Math.pow(dest[1]
 						- now[1] + 1, 2))));
 
-		if (now[0] - 1 < 0 || maze[now[0] - 1][now[1]] == 1
-				|| visited.containsKey(("[" + (now[0] - 1) + "," + now[1] + "]"))) {
+		if (now[0] - 1 < 0 || maze[now[0] - 1][now[1]] == 1) {
 			map.remove("N[" + (now[0] - 1) + "," + now[1] + "]");
 		}
-		if (now[1] + 1 >= maze[0].length|| maze[now[0]][now[1] + 1] == 1
-				|| visited.containsKey(("[" + (now[0]) + "," + (now[1] + 1) + "]"))) {
+		if (now[1] + 1 >= maze[0].length|| maze[now[0]][now[1] + 1] == 1) {
 			map.remove("E[" + now[0] + "," + (now[1] + 1) + "]");
 		}
-		if (now[0] + 1 >= maze.length || maze[now[0] + 1][now[1]] == 1
-				|| visited.containsKey(("[" + (now[0] + 1) + "," + now[1] + "]"))) {
+		if (now[0] + 1 >= maze.length || maze[now[0] + 1][now[1]] == 1) {
 			map.remove("S[" + (now[0] + 1) + "," + now[1] + "]");
 		}
-		if (now[1] - 1 < 0	|| maze[now[0]][now[1] - 1] == 1
-				|| visited.containsKey(("[" + (now[0]) + "," + (now[1] - 1) + "]"))) {
+		if (now[1] - 1 < 0	|| maze[now[0]][now[1] - 1] == 1) {
 			map.remove("W[" + now[0] + "," + (now[1] - 1) + "]");
 		}
 		
@@ -118,6 +112,6 @@ public class Aalgorithm {
 				on.put(string, dis + Integer.parseInt(string2) + 1);
 			}
 		}
-		myAstar(on, visited, dest);
+		myAstar(on, dest);
 	}
 }
