@@ -9,3 +9,5 @@ the excercise for ai course
 
 27.Jan, all done about astar.
 
+28.Jan, initialize the PDDL problem.
+
