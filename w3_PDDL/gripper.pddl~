@@ -1,0 +1,9 @@
+;domain file of gripper
+
+(define (domain gripper)
+	;The defination of the objects
+	(:objects rooma,roomb
+		  ball1,ball2,ball3,ball4
+		  left,right
+	)
+)
