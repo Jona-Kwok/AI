@@ -1,46 +1,31 @@
-;domain file of gripper
-
 (define (domain gripper)
-	;The defination of the objects
-	(:requirements	:typing)
-	(:types	Room Ball Arm)
-	(:constants l r - Arm)
+   (:requirements :typing)
+   (:types Room Ball Arm)
+   (:constants l r - Arm)
+   (:predicates (at-robby ?r - Room)
+		(at ?b - Ball ?r - Room)
+		(free ?a - Arm)
+		(carry ?o - Ball ?a - Arm))
 
-	;Predicate
-	(:predicates	
-			(AT-ROBBY ?r - Room) (AT-BALL ?b - Ball ?r - Room)
-			(free ?a - Arm) (carry ?b - Ball ?a - Arm)
-	)
+   (:action move
+       :parameters  (?from ?to - Room)
+       :precondition (at-robby ?from)
+       :effect (and  (at-robby ?to)
+		     (not (at-robby ?from))))
 
-	;Actions
-	(:action move
-	 :parameters (?r1 ?r2 - Room)
-	 :precondition (and (AT-ROBBY ?r1)
-	 					)
-	 :effect (and	(AT-ROBBY ?r2)
-	 				(not (AT-ROBBY ?r1))
-	 				)
-	)
-	(:action pick
-	 :parameters (?a -Arm  ?b - Ball  ?r - Room)
-	 :precondition (and (AT-ROBBY ?r)
-	 					(AT-BALL ?b ?r)
-	 					(free ?a)
-	 					)
-	 :effect (and (not (AT-BALL ?b ?r))
-	 			  (not (free ?a))
-	 			  (carry ?b ?a)
-	 			  )
-	)
-	(:action drop
-	 :parameters (?a - Arm  ?b - Ball  ?r - Room)
-	 :precondition (and (AT-ROBBY ?r)
-	 					(carry ?b ?a)
-	 					)
-	 :effect (and (AT-BALL ?r ?b)
-	 			  (free ?a)
-	 			  (not (carry ?b ?a))
-	 			  )
-	)
 
-)
+
+   (:action pick
+       :parameters (?obj - Ball ?room - Room ?a - Arm)
+       :precondition  (and  (at ?obj ?room) (at-robby ?room) (free ?a))
+       :effect (and (carry ?obj ?a)
+		    (not (at ?obj ?room)) 
+		    (not (free ?a))))
+
+
+   (:action drop
+       :parameters  (?obj - Ball ?room - Room ?a - Arm)
+       :precondition  (and  (carry ?obj ?a) (at-robby ?room))
+       :effect (and (at ?obj ?room)
+		    (free ?a)
+		    (not (carry ?obj ?a)))))
