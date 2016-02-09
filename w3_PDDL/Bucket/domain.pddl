@@ -64,8 +64,8 @@
                        (Capacity ?b2 ?cap2)
                        (have ?b1 ?w1)
                        (have ?b2 ?w2)
-                       (not (= ?cap1 ?w1))
-                       (not (= ?cap2 ?w2))
+                       ;(not (= ?cap1 ?w1)) ; this line should be eliminated
+		       (not (= ?cap2 ?w2))
                        (plus ?w1 ?w2 ?sum) ; w1 + w2 >= cap2
                        (leq ?cap2 ?sum)
                        (plus ?i2 ?w2 ?cap2) ; i2 + w2 = cap2
