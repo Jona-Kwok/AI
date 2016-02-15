@@ -1,0 +1,110 @@
+// You can set the horizon length here, or you can include it on the grounder
+// commandline as horizon=11 right after the input file name.
+//let horizon = 11;
+
+type package = { p1,p2,p3,p4,p5};
+type location = {room1,room2};
+type robot = { robot1, robot2 };
+
+// Changes of state variables
+
+forall r : robot
+ forall l : location
+  forall i : [1..horizon]
+   (at(r,l,i) <-> ((at(r,l,i-1) & forall l2 : location not move(r,l,l2,i-1) end)
+                  | forsome l2 : location move(r,l2,l,i-1) end))
+  end
+ end
+end;
+
+forall p : package
+ forall l : location
+  forall i : [1..horizon]
+   (at(p,l,i) <-> ((at(p,l,i-1) & forall r : robot not load(r,p,l,i-1) end)
+                  | forsome r : robot unload(r,p,l,i-1) end))
+  end
+ end
+end;
+
+forall p : package
+ forall r : robot
+  forall i : [1..horizon]
+   (holds(r,p,i) <-> ((holds(r,p,i-1) & forall l : location not unload(r,p,l,i-1) end)
+                  | forsome l : location load(r,p,l,i-1) end))
+  end
+ end
+end;
+
+ forall r : robot
+  forall i : [1..horizon]
+   (free(r,i) <-> ((free(r,i-1) & forall p : package forall l : location not load(r,p,l,i-1) end end)
+                  | forsome p : package forsome l : location unload(r,p,l,i-1) end end))
+  end
+end;
+
+
+// Preconditions of actions
+
+forall r : robot
+ forall i : [0..horizon-1]
+  forall p : package
+   forall l : location
+         (load(r,p,l,i) -> (at(r,l,i) & at(p,l,i) & free(r,i))) &
+	 (unload(r,p,l,i) -> (at(r,l,i) & holds(r,p,i)))
+end end end end;
+
+forall r : robot
+ forall i : [0..horizon-1]
+  forall l1 : location
+   forall l2 : location
+     (move(r,l1,l2,i) -> ((l1 != l2) & at(r,l1,i)))
+end end end end;
+
+// Exclusive actions:
+// At most one move from a location at a time
+forall r : robot
+ forall i : [0..horizon-1]
+  forall l1 : location
+    atmostone l2 : location move(r,l1,l2,i)
+   end
+  end
+ end
+end;
+// At most one robot can load for each object at a time
+forall p : package
+ forall i : [0..horizon-1]
+  forall l : location
+    atmostone r : robot load(r,p,l,i)
+   end
+  end
+ end
+end;
+// Robot cannot move and load or unload at the same time
+forall r : robot
+ forall i : [0..horizon-1]
+  forall l1 : location
+   forall l2 : location
+    move(r,l1,l2,i) -> forall p : package (not load(r,p,l1,i) & not unload(r,p,l1,i)) end
+   end
+  end
+ end
+end;
+
+
+// Invariant: only one object held at a time
+
+forall i : [0..horizon] forall r : robot forall p : package forall pp : package
+  ((p != pp) -> not (holds(r,p,i) & holds(r,pp,i))) end end end end;
+
+// Initial state
+
+forall r : robot free(r,0) end;
+forall r : robot at(r,room1,0) end;
+forall r : robot not at(r,room2,0) end;
+forall p : package at(p,room1,0) end;
+forall p : package not at(p,room2,0) end;
+forall p : package not holds(robot1,p,0) end;
+
+// Goal state
+
+forall p : package at(p,room2,horizon) end;

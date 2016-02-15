@@ -1,0 +1,131 @@
+
+
+// 2016 (C) Aalto University, Jussi Rintanen
+
+
+//***************************************************************************************
+//****************************** THE ZEBRA PUZZLE ***************************************
+//***************************************************************************************
+
+// The Gentlemen
+
+type M = { Eng,Spa,Ukr,Nor,Jap };
+
+// The 5 cigarette brands
+
+type C = { OldGold, Kools, Chesterfields, LuckyStrike, Parliaments };
+
+// The 5 colors of houses
+
+type P = { Red, Green, Ivory, Yellow, Blue };
+
+// The 5 pets
+
+type A = { Dog, Snails, Fox, Horse, Zebra };
+
+// The 5 drinks
+
+type D = { Coffee, Tea, Milk, OrangeJuice, Water };
+
+
+// Houses numbered from 1 to 5 so that we can talk about neighboring houses
+
+type H = { 1,2,3,4,5 };
+type H4 = { 1,2,3,4 };
+
+// All formulas representing the Zebra Puzzle
+
+// Background assumptions about uniqueness:
+// Everybody smokes exactly one cigarette.
+// Every cigarette is smoked by exactly one person.
+// Same with pets, drinks, homes, and colors of houses.
+
+forall m : M exactlyone c : C Smokes(m,c) end end;
+forall c : C exactlyone m : M Smokes(m,c) end end;
+
+forall m : M exactlyone x : A Pet(m,x) end end;
+forall z : A exactlyone m : M Pet(m,z) end end;
+
+forall h : H exactlyone p : P Color(h,p) end end;
+forall p : P exactlyone h : H Color(h,p) end end;
+
+forall m : M exactlyone d : D Drinks(m,d) end end;
+forall d : D exactlyone m : M Drinks(m,d) end end;
+
+forall m : M exactlyone h : H LivesIn(m,h) end end;
+forall h : H exactlyone m : M LivesIn(m,h) end end;
+
+// The remaining formulas are the explicitly stated parts of the puzzle.
+
+// The Englishman lives in the red house.
+
+forsome i : H LivesIn(Eng,i) & Color(i,Red) end;
+
+// The Spaniard owns the dog.
+
+Pet(Spa,Dog);
+
+// Coffee is drunk in the green house.
+
+forsome i : M forsome j :  H (LivesIn(i,j) & Drinks(i,Coffee) & Color(j,Green))
+end end;
+
+// The Ukrainian drinks tea.
+
+Drinks(Ukr,Tea);
+
+// The green house is immediately to the right of the ivory house.
+
+forsome i : H4 (Color(i,Ivory) & Color(i+1,Green)) end;
+
+// The Old Gold smoker owns snails.
+
+forsome i : M (Smokes(i,OldGold) & Pet(i,Snails)) end;
+
+// Kools are smoked in the yellow house.
+
+forsome i : M forsome j : H ( LivesIn(i,j) & Color(j,Yellow) & Smokes(i,Kools)) end end;
+
+// Milk is drunk in the middle house.
+
+forsome i : M ( LivesIn(i,3) & Drinks(i,Milk)) end;
+
+// The Norwegian lives in the first house.
+
+LivesIn(Nor,1);
+
+// The man who smokes Chesterfields lives in the house next to the man with the fox.
+
+forsome i : M forsome j : M forsome k : H forsome l : H
+						  (Smokes(i,Chesterfields) &
+						      Pet(j,Fox) &
+						      LivesIn(i,k) &
+						      LivesIn(j,l) &
+						      (k = l+1 | l = k+1))
+end end end end;
+
+// Kools are smoked in the house next to the house where the horse is kept.
+
+forsome i : M forsome j : M forsome k : H forsome l : H
+						  (Smokes(i,Kools) &
+						      Pet(j,Horse) &
+						      LivesIn(i,k) &
+						      LivesIn(j,l) &
+						      (k = l+1 | l = k+1))
+end end end end;
+						      
+
+// The Lucky Strike smoker drinks orange juice.
+
+forsome i : M (Smokes(i,LuckyStrike) & Drinks(i,OrangeJuice)) end;
+
+// The Japanese smokes Parliaments.
+
+Smokes(Jap,Parliaments);
+
+// The Norwegian lives next to the blue house.
+
+forsome i : H forsome j : H (LivesIn(Nor,i) &
+				Color(j,Blue) &
+			      (i = j+1 | j = i+1))
+end end;
