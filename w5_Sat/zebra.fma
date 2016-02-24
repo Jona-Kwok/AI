@@ -40,7 +40,11 @@ type H4 = { 1,2,3,4 };
 // Every cigarette is smoked by exactly one person.
 // Same with pets, drinks, homes, and colors of houses.
 
-forall m : M exactlyone c : C Smokes(m,c) end end;
+forall m : M 
+	exactlyone c : C 
+		Smokes(m,c) 
+	end 
+end;
 forall c : C exactlyone m : M Smokes(m,c) end end;
 
 forall m : M exactlyone x : A Pet(m,x) end end;

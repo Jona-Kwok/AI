@@ -1,0 +1,71 @@
+//define types
+
+// Courses
+type Courses = { Phy, Mat1, Mat2, Che1, Che2, AI, Logic, Prog, Fin, Spa, Ara, Jap };
+
+// People 
+type People = { Andrew, Emily, Phoebe };
+
+// Time
+type Time = { 8, 9, 10, 11 };
+
+// the common restriction on courses.
+// Each course will have only one teacher
+forall c : Courses 
+	exactlyone p : People
+		Teach(p,c)
+	end
+end;
+
+// Each course will happen at only one time
+forall c : Courses
+	exactlyone t : Time
+		AtTime(c,t)
+	end
+end;
+
+// Each person can have only one course at a time
+forall p : People
+	forall t : Time
+		exactlyone c : Courses
+			(AtTime(c,t) & Teach(p,c))
+		end
+	end
+end;
+
+
+// Unique restrictions 
+
+// 1.Only Emily can teach Spanish
+Teach(Emily,Spa);
+
+// 2.Only Andrew can teach Match2
+Teach(Andrew,Mat2);
+
+// 3.Only Phoebe can teach AI
+Teach(Phoebe,AI);
+
+// 4. Only Andrew and Emily can teach Logic
+(Teach(Andrew,Logic) | Teach(Emily,Logic));
+
+// 5. Only Andrew and Phoebe can teach the Chemistry courses, Japanese and Finnish.
+( Teach(Andrew,Che1) | Teach(Phoebe,Che1) ) &
+( Teach(Andrew,Che2) | Teach(Phoebe,Che2) ) &
+( Teach(Andrew,Jap) | Teach(Phoebe,Jap) ) &
+( Teach(Andrew,Fin) | Teach(Phoebe,Fin) ) ; 
+
+// 6. Math1 and Math2 cannot be simultaneous.
+forall t : Time
+	(not (AtTime(Mat1,t) & AtTime(Mat2,t) ) )
+end;
+
+// 7. Only Phoebe and Emily can teach Arabic.
+(Teach(Phoebe,Ara) | Teach(Emily,Ara));
+
+// 8. Programming and Logic cannot be simultaneous.
+forall t : Time
+	(not (AtTime(Prog,t) & AtTime(Logic,t) ) )
+end;
+
+// 9. The language courses must be later than 8am.
+(not ( AtTime(Fin,8) | AtTime(Spa,8) | AtTime(Ara,8) | AtTime(Jap,8)));
